@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Navigatore Biologico - Scopri il Tuo Protocollo di Digiuno</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- HEADER CON LOGO -->
+<header class="site-header">
+    <div class="header-container">
+        <div class="logo">
+            <img src="logo.png" alt="Logo" class="logo-image">
+            <span class="logo-text"></span>
+            <span class="logo-tagline">Smetti di contare le calorie. Inizia a contare le ore.</span>
+        </div>
+    </div>
+</header>
+
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="hero-container">
+        <h1 class="hero-title">Scopri il Tuo Protocollo di Digiuno Personalizzato</h1>
+        <p class="hero-subtitle">
+            Il digiuno intermittente non è uno strumento universale. 
+            <strong>2 minuti di quiz</strong> per scoprire se fa per te e quale protocollo è su misura per il tuo corpo.
+        </p>
+        
+        <div class="hero-benefits">
+            <div class="benefit-item">
+                <span class="benefit-icon">🛡️</span>
+                <div class="benefit-text">
+                    <strong>Filtro di Sicurezza</strong>
+                    <p>Verifica se il tuo corpo è pronto per il digiuno</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <span class="benefit-icon">🎯</span>
+                <div class="benefit-text">
+                    <strong>Profilo Personalizzato</strong>
+                    <p>Scopri quale protocollo è perfetto per te (donne, atleti, biohacker...)</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <span class="benefit-icon">📚</span>
+                <div class="benefit-text">
+                    <strong>Capitoli Consigliati</strong>
+                    <p>Saprai esattamente quali sezioni del libro leggere per primi</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-cta">
+            <button class="btn btn-primary btn-large" onclick="startQuiz()">
+                Inizia il Quiz Gratuito (2 minuti)
+            </button>
+            <p class="hero-note">✓ 100% gratuito &nbsp; ✓ Nessuna email richiesta &nbsp; ✓ Risultato immediato</p>
+        </div>
+    </div>
+</section>
+
+<!-- QUIZ CONTAINER (nascosto inizialmente) -->
+<div class="container" id="quizContainer" style="display: none;">
+    <!-- Barra di Progresso -->
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+    <!-- STEP 1: Filtro di Sicurezza (Semaforo Rosso) -->
+    <div class="step" id="step-safety">
+        <h2>🛑 Fase 1: Il Semaforo Rosso di Sicurezza</h2>
+        <p class="subtitle">La tua salute viene prima di tutto. Seleziona "Sì" se ti trovi in una di queste condizioni.</p>
+        <form id="safetyForm">
+            <div class="question-box safety-box">
+                <label>Sei in gravidanza o stai allattando?</label>
+                <div class="radio-group">
+                    <input type="radio" name="safe1" id="s1y" value="yes"><label for="s1y">Sì</label>
+                    <input type="radio" name="safe1" id="s1n" value="no" checked><label for="s1n">No</label>
+                </div>
+            </div>
+            <div class="question-box safety-box">
+                <label>Hai (o hai avuto) disturbi del comportamento alimentare (DCA)?</label>
+                <div class="radio-group">
+                    <input type="radio" name="safe2" id="s2y" value="yes"><label for="s2y">Sì</label>
+                    <input type="radio" name="safe2" id="s2n" value="no" checked><label for="s2n">No</label>
+                </div>
+            </div>
+            <div class="question-box safety-box">
+                <label>Hai meno di 18 anni?</label>
+                <div class="radio-group">
+                    <input type="radio" name="safe3" id="s3y" value="yes"><label for="s3y">Sì</label>
+                    <input type="radio" name="safe3" id="s3n" value="no" checked><label for="s3n">No</label>
+                </div>
+            </div>
+            <div class="question-box safety-box">
+                <label>Soffri di Diabete di Tipo 1 o sei in terapia farmacologica senza stretto controllo medico?</label>
+                <div class="radio-group">
+                    <input type="radio" name="safe4" id="s4y" value="yes"><label for="s4y">Sì</label>
+                    <input type="radio" name="safe4" id="s4n" value="no" checked><label for="s4n">No</label>
+                </div>
+            </div>
+        </form>
+        <div class="button-group">
+    <button class="btn btn-back" onclick="goBack()">← Indietro</button>
+    <button class="btn" onclick="checkSafety()">Verifica Sicurezza e Continua</button>
+</div>
+    </div>
+
+    <!-- STEP 1.5: Risultato Sicurezza (Bloccante) -->
+    <div class="step" id="step-safety-fail">
+        <div class="result-box result-danger">
+            <h2>⚠️ Attenzione: Stop Temporaneo</h2>
+            <p>Il digiuno intermittente è una pratica stressante per l'organismo e, nelle condizioni che hai segnalato, potrebbe essere controindicato o richiedere una supervisione medica specialistica.</p>
+            <p><strong>Il nostro consiglio:</strong> Non procedere con i protocolli fai-da-te. Consulta il tuo medico curante o un nutrizionista clinico. La tua salute è la priorità assoluta.</p>
+        </div>
+    </div>
+
+    <!-- STEP 2: Selettore Profilo -->
+    <div class="step" id="step-profile">
+        <h2>🎯 Fase 2: Il Tuo Profilo Obiettivo</h2>
+        <p class="subtitle">Ogni corpo ha un "punto debole" e un "punto di forza". Qual è la tua priorità assoluta in questo momento della vita?</p>
+        <form id="profileForm">
+            <div class="question-box">
+                <label for="p1">Equilibrio ormonale, PCOS, ciclo irregolare o menopausa.</label>
+                <div class="radio-group">
+                    <input type="radio" name="profile" id="p1" value="women" required><label for="p1">Scegli</label>
+                </div>
+            </div>
+            <div class="question-box">
+                <label for="p2">Perdere grasso viscerale, vincere l'insulino-resistenza o il pre-diabete.</label>
+                <div class="radio-group">
+                    <input type="radio" name="profile" id="p2" value="metabolic"><label for="p2">Scegli</label>
+                </div>
+            </div>
+            <div class="question-box">
+                <label for="p3">Migliorare la performance sportiva, la forza o la ricomposizione corporea.</label>
+                <div class="radio-group">
+                    <input type="radio" name="profile" id="p3" value="athlete"><label for="p3">Scegli</label>
+                </div>
+            </div>
+            <div class="question-box">
+                <label for="p4">Potenziare la lucidità mentale, il focus e puntare alla longevità.</label>
+                <div class="radio-group">
+                    <input type="radio" name="profile" id="p4" value="biohacker"><label for="p4">Scegli</label>
+                </div>
+            </div>
+            <div class="question-box">
+                <label for="p5">Libertà mentale: odio contare le calorie e voglio smettere di fare la dieta dei "quanto".</label>
+                <div class="radio-group">
+                    <input type="radio" name="profile" id="p5" value="simplicity"><label for="p5">Scegli</label>
+                </div>
+            </div>
+        </form>
+        <div class="button-group">
+    <button class="btn btn-back" onclick="goBack()">← Indietro</button>
+    <button class="btn" onclick="showProfile()">Sblocca il Mio Percorso Personalizzato</button>
+</div>
+    </div>
+
+    <!-- STEP 3: Risultato Profilo -->
+    <div class="step" id="step-result">
+        <div class="result-box result-success">
+            <h2 id="result-title">Profilo Identificato</h2>
+            <p id="result-desc"></p>
+            <h3 style="margin-top:20px; font-size: 1.1rem;">📚 I tuoi capitoli chiave ne "La Rivoluzione del Quando":</h3>
+            <div id="result-chapters" style="margin-top:15px;"></div>
+        </div>
+        <button class="btn" onclick="location.reload()" style="background: #546E7A; margin-top:30px;">Torna all'inizio</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

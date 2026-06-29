@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <!-- Sfondo circolare verde -->
+    <circle cx="50" cy="50" r="45" fill="#2E7D32"/>
+    
+    <!-- Quadrante bianco -->
+    <circle cx="50" cy="50" r="35" fill="white"/>
+    
+    <!-- Lancetta ore (verticale) -->
+    <line x1="50" y1="50" x2="50" y2="25" stroke="#2E7D32" stroke-width="4" stroke-linecap="round"/>
+    
+    <!-- Lancetta minuti (orizzontale) -->
+    <line x1="50" y1="50" x2="68" y2="50" stroke="#2E7D32" stroke-width="4" stroke-linecap="round"/>
+    
+    <!-- Centro -->
+    <circle cx="50" cy="50" r="3" fill="#2E7D32"/>
+    
+    <!-- Tacche delle ore (opzionali, per dettaglio) -->
+    <line x1="50" y1="18" x2="50" y2="22" stroke="#2E7D32" stroke-width="2"/>
+    <line x1="82" y1="50" x2="78" y2="50" stroke="#2E7D32" stroke-width="2"/>
+    <line x1="50" y1="82" x2="50" y2="78" stroke="#2E7D32" stroke-width="2"/>
+    <line x1="18" y1="50" x2="22" y2="50" stroke="#2E7D32" stroke-width="2"/>
+</svg>
