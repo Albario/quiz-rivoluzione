@@ -31,7 +31,7 @@
         
         <div class="hero-benefits">
             <div class="benefit-item">
-                <span class="benefit-icon">🛡️</span>
+                <span class="benefit-icon">️</span>
                 <div class="benefit-text">
                     <strong>Filtro di Sicurezza</strong>
                     <p>Verifica se il tuo corpo è pronto per il digiuno</p>
@@ -57,7 +57,7 @@
             <button class="btn btn-primary btn-large" onclick="startQuiz()">
                 Inizia il Quiz Gratuito (2 minuti)
             </button>
-            <p class="hero-note">✓ 100% gratuito &nbsp; ✓ Nessuna email richiesta &nbsp; ✓ Risultato immediato</p>
+            <p class="hero-note">✓ 100% gratuito &nbsp; ✓ Risultato immediato</p>
         </div>
     </div>
 </section>
@@ -102,64 +102,109 @@
             </div>
         </form>
         <div class="button-group">
-    <button class="btn btn-back" onclick="goBack()">← Indietro</button>
-    <button class="btn" onclick="checkSafety()">Verifica Sicurezza e Continua</button>
-</div>
+            <button class="btn btn-back" onclick="goBack()">← Indietro</button>
+            <button class="btn" onclick="checkSafety()">Verifica Sicurezza e Continua</button>
+        </div>
     </div>
 
     <!-- STEP 1.5: Risultato Sicurezza (Bloccante) -->
-    <div class="step" id="step-safety-fail">
+    <div class="step" id="step-safety-fail" style="display: none;">
         <div class="result-box result-danger">
             <h2>⚠️ Attenzione: Stop Temporaneo</h2>
             <p>Il digiuno intermittente è una pratica stressante per l'organismo e, nelle condizioni che hai segnalato, potrebbe essere controindicato o richiedere una supervisione medica specialistica.</p>
             <p><strong>Il nostro consiglio:</strong> Non procedere con i protocolli fai-da-te. Consulta il tuo medico curante o un nutrizionista clinico. La tua salute è la priorità assoluta.</p>
         </div>
+        <button class="btn btn-back" onclick="goBack()" style="margin-top: 20px;">← Torna Indietro</button>
     </div>
 
     <!-- STEP 2: Selettore Profilo -->
-    <div class="step" id="step-profile">
+    <div class="step" id="step-profile" style="display: none;">
         <h2>🎯 Fase 2: Il Tuo Profilo Obiettivo</h2>
         <p class="subtitle">Ogni corpo ha un "punto debole" e un "punto di forza". Qual è la tua priorità assoluta in questo momento della vita?</p>
         <form id="profileForm">
             <div class="question-box">
                 <label for="p1">Equilibrio ormonale, PCOS, ciclo irregolare o menopausa.</label>
                 <div class="radio-group">
-                    <input type="radio" name="profile" id="p1" value="women" required><label for="p1">Scegli</label>
+                    <input type="radio" name="profile" id="p1" value="ormoni" required><label for="p1">Scegli</label>
                 </div>
             </div>
             <div class="question-box">
                 <label for="p2">Perdere grasso viscerale, vincere l'insulino-resistenza o il pre-diabete.</label>
                 <div class="radio-group">
-                    <input type="radio" name="profile" id="p2" value="metabolic"><label for="p2">Scegli</label>
+                    <input type="radio" name="profile" id="p2" value="grasso-viscerale"><label for="p2">Scegli</label>
                 </div>
             </div>
             <div class="question-box">
                 <label for="p3">Migliorare la performance sportiva, la forza o la ricomposizione corporea.</label>
                 <div class="radio-group">
-                    <input type="radio" name="profile" id="p3" value="athlete"><label for="p3">Scegli</label>
+                    <input type="radio" name="profile" id="p3" value="performance"><label for="p3">Scegli</label>
                 </div>
             </div>
             <div class="question-box">
                 <label for="p4">Potenziare la lucidità mentale, il focus e puntare alla longevità.</label>
                 <div class="radio-group">
-                    <input type="radio" name="profile" id="p4" value="biohacker"><label for="p4">Scegli</label>
+                    <input type="radio" name="profile" id="p4" value="cervello"><label for="p4">Scegli</label>
                 </div>
             </div>
             <div class="question-box">
                 <label for="p5">Libertà mentale: odio contare le calorie e voglio smettere di fare la dieta dei "quanto".</label>
                 <div class="radio-group">
-                    <input type="radio" name="profile" id="p5" value="simplicity"><label for="p5">Scegli</label>
+                    <input type="radio" name="profile" id="p5" value="liberta"><label for="p5">Scegli</label>
                 </div>
             </div>
         </form>
         <div class="button-group">
-    <button class="btn btn-back" onclick="goBack()">← Indietro</button>
-    <button class="btn" onclick="showProfile()">Sblocca il Mio Percorso Personalizzato</button>
-</div>
+            <button class="btn btn-back" onclick="goBack()">← Indietro</button>
+            <button class="btn" onclick="showProfile()">Sblocca il Mio Percorso Personalizzato</button>
+        </div>
     </div>
 
-    <!-- STEP 3: Risultato Profilo -->
-    <div class="step" id="step-result">
+    <!-- STEP 2.5: Form Raccolta Email (NUOVO!) -->
+    <div class="step" id="step-email-form" style="display: none;">
+        <div class="result-box result-success">
+            <h2>🎯 Il tuo profilo è stato identificato!</h2>
+            <p>Inserisci la tua email per ricevere il risultato personalizzato e accedere alla guida completa.</p>
+            
+            <form id="emailForm" style="margin-top: 20px;">
+                <input 
+                    type="email" 
+                    name="email" 
+                    id="emailInput"
+                    placeholder="La tua email migliore" 
+                    required 
+                    style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; margin-bottom: 15px; box-sizing: border-box;"
+                />
+                
+                <input type="hidden" name="profilo" id="hidden-profilo" value="" />
+                
+                <div style="text-align: left; font-size: 13px; color: #555; margin-bottom: 20px;">
+                    <input type="checkbox" id="privacy-consent" name="privacy_consent" required style="margin-right: 8px;" />
+                    <label for="privacy-consent">
+                        Ho letto e accetto la <a href="https://tuosito.it/privacy-policy/" target="_blank">Privacy Policy</a>.
+                    </label>
+                </div>
+
+                <button 
+                    type="submit" 
+                    id="submitBtn"
+                    style="width: 100%; padding: 16px; background-color: #22c55e; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer;"
+                >
+                    📩 Mostra il mio profilo e sblocca la guida
+                </button>
+                
+                <div id="form-success" style="color: #22c55e; font-weight: bold; padding: 15px; background: #f0fdf4; border-radius: 8px; display: none; margin-top: 15px;">
+                    ✅ Perfetto! Email inviata. Reindirizzamento in corso...
+                </div>
+                
+                <div id="form-error" style="color: #ef4444; font-weight: bold; padding: 15px; background: #fef2f2; border-radius: 8px; display: none; margin-top: 15px;">
+                    ❌ Si è verificato un errore. Riprova.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- STEP 3: Risultato Profilo (ora non più usato direttamente) -->
+    <div class="step" id="step-result" style="display: none;">
         <div class="result-box result-success">
             <h2 id="result-title">Profilo Identificato</h2>
             <p id="result-desc"></p>

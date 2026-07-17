@@ -1,189 +1,187 @@
+// ============================================
+// CONFIGURAZIONE: Mappa i profili agli URL WordPress
+// ============================================
+const MAP_PAGINE_RISULTATO = {
+  'ormoni': 'https://nutripop.altervista.org/digiuno-intermittente-donne-pcos-la-guida-scientifica-per-ritrovare-lequilibrio-ormonale/',
+  'grasso-viscerale': 'https://nutripop.altervista.org/digiuno-intermittente-per-perdere-grasso-viscerale-e-insulino-resistenza-il-reset-che-il-tuo-corpo-chiede/',
+  'performance': ' https://nutripop.altervista.org/digiuno-intermittente-per-performance-sportiva-e-massa-magra-ottimizzazione-e-recupero/',
+  'cervello': 'https://nutripop.altervista.org/digiuno-intermittente-per-focus-mentale-come-liberare-il-cervello-dalla-nebbia/',
+  'liberta': 'https://nutripop.altervista.org/digiuno-intermittente-senza-contare-calorie-la-guida-alla-liberta-mentale/'
+};
+
+// Variabile per tracciare lo step corrente
+let currentStep = 'hero';
+let stepHistory = [];
+
+// ============================================
+// FUNZIONI DI NAVIGAZIONE
+// ============================================
+
 function startQuiz() {
-    // Nasconde la hero section
-    document.querySelector('.hero').style.display = 'none';
-    
-    // Mostra il quiz container
-    document.getElementById('quizContainer').style.display = 'block';
-    
-    // Mostra il primo step del quiz
-    document.getElementById('step-safety').classList.add('active');
-    
-    // Scroll in alto
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.querySelector('.hero').style.display = 'none';
+  document.getElementById('quizContainer').style.display = 'block';
+  showStep('step-safety');
+  updateProgress(33);
 }
 
-let currentStep = 0;
-let stepHistory = []; // ✅ QUESTA RIGA MANCAVA!
-
-function updateProgress() {
-    const progress = document.getElementById('progress');
-    if (currentStep === 0) progress.style.width = '0%';
-    else if (currentStep === 1) progress.style.width = '33%';
-    else if (currentStep === 2) progress.style.width = '50%';
-    else if (currentStep === 3) progress.style.width = '66%';
-    else if (currentStep === 4) progress.style.width = '100%';
-}
-
-function nextStep(stepId) {
-    // Salva lo step corrente nello stack (prima di cambiarlo)
-    const currentActive = document.querySelector('.step.active');
-    if (currentActive && currentActive.id !== stepId) {
-        stepHistory.push(currentActive.id);
-    }
-    
-    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-    document.getElementById(stepId).classList.add('active');
-    
-    if (stepId === 'step-safety') currentStep = 1;
-    if (stepId === 'step-safety-fail') currentStep = 2;
-    if (stepId === 'step-profile') currentStep = 3;
-    if (stepId === 'step-result') currentStep = 4;
-    
-    updateProgress();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+function showStep(stepId) {
+  // Nascondi tutti gli step
+  document.querySelectorAll('.step').forEach(step => {
+    step.style.display = 'none';
+  });
+  
+  // Mostra lo step richiesto
+  document.getElementById(stepId).style.display = 'block';
+  
+  // Salva nella cronologia
+  if (currentStep !== stepId) {
+    stepHistory.push(currentStep);
+  }
+  currentStep = stepId;
+  
+  // Scroll in alto
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function goBack() {
-    if (stepHistory.length === 0) {
-        // Se non c'è cronologia, torna alla hero
-        document.querySelector('.hero').style.display = 'block';
-        document.getElementById('quizContainer').style.display = 'none';
-        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-        stepHistory = [];
-        currentStep = 0;
-        updateProgress();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        return;
-    }
-    
+  if (stepHistory.length > 0) {
     const previousStep = stepHistory.pop();
-    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-    document.getElementById(previousStep).classList.add('active');
+    showStep(previousStep);
     
-    // Aggiorna currentStep in base allo step precedente
-    if (previousStep === 'step-safety') currentStep = 1;
-    if (previousStep === 'step-safety-fail') currentStep = 2;
-    if (previousStep === 'step-profile') currentStep = 3;
-    if (previousStep === 'step-result') currentStep = 4;
-    
-    updateProgress();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Aggiorna la barra di progresso
+    if (previousStep === 'step-safety') {
+      updateProgress(33);
+    } else if (previousStep === 'step-profile') {
+      updateProgress(66);
+    }
+  } else {
+    // Torna alla hero
+    document.querySelector('.hero').style.display = 'block';
+    document.getElementById('quizContainer').style.display = 'none';
+    currentStep = 'hero';
+  }
 }
+
+function updateProgress(percent) {
+  document.getElementById('progress').style.width = percent + '%';
+}
+
+// ============================================
+// STEP 1: Verifica Sicurezza
+// ============================================
 
 function checkSafety() {
-    const dangerFlags = ['safe1', 'safe2', 'safe3', 'safe4'];
-    let isSafe = true;
-    
-    dangerFlags.forEach(name => {
-        const selected = document.querySelector(`input[name="${name}"]:checked`);
-        if (selected && selected.value === 'yes') {
-            isSafe = false;
-        }
-    });
-
-    if (!isSafe) {
-        nextStep('step-safety-fail');
-    } else {
-        nextStep('step-profile');
-    }
+  const safe1 = document.querySelector('input[name="safe1"]:checked').value;
+  const safe2 = document.querySelector('input[name="safe2"]:checked').value;
+  const safe3 = document.querySelector('input[name="safe3"]:checked').value;
+  const safe4 = document.querySelector('input[name="safe4"]:checked').value;
+  
+  // Se almeno una risposta è "yes", blocca
+  if (safe1 === 'yes' || safe2 === 'yes' || safe3 === 'yes' || safe4 === 'yes') {
+    showStep('step-safety-fail');
+    updateProgress(33);
+  } else {
+    // Tutti "no", procedi alla Fase 2
+    showStep('step-profile');
+    updateProgress(66);
+  }
 }
+
+// ============================================
+// STEP 2: Mostra Form Email (INVECE del risultato diretto)
+// ============================================
 
 function showProfile() {
-    const selected = document.querySelector('input[name="profile"]:checked');
-    if (!selected) {
-        alert('Per favore, seleziona il tuo obiettivo principale per continuare.');
-        return;
-    }
-
-    const profiles = {
-        women: {
-            title: "🌸 Profilo: Sincronizzazione Femminile",
-            desc: "Il tuo corpo è governato da un'orchestra ormonale complessa (estrogeni, progesterone, grelina). Un protocollo rigido potrebbe stressare la tua tiroide o bloccare l'ovulazione. Il tuo approccio deve essere <strong>ciclico e rispettoso delle tue fasi</strong>.",
-            chapters: ["Cap 2: Il Digiuno al Femminile", "Cap 7: Nutrire il Digiuno (Focus Ormoni)", "Cap 8: Ostacoli e Sostenibilità"]
-        },
-        metabolic: {
-            title: "🔥 Profilo: Reset Metabolico",
-            desc: "Il tuo obiettivo è abbassare i livelli di insulina a riposo per permettere al corpo di accedere finalmente alle riserve di grasso viscerale. Il digiuno sarà la tua chiave per spegnere l'infiammazione cronica e riattivare il metabolismo.",
-            chapters: ["Cap 1: La Macchina del Corpo", "Cap 3: Riavviare il Metabolismo", "Cap 7: Cosa Mettere nel Piatto"]
-        },
-        athlete: {
-            title: "🏋️ Profilo: Performance & Ricomposizione",
-            desc: "Vuoi perdere grasso mantenendo (o aumentando) la massa magra e la forza. Il segreto non è il digiuno in sé, ma il <strong>timing dei nutrienti</strong> e la gestione strategica delle proteine attorno al tuo allenamento.",
-            chapters: ["Cap 4: Oltre i Limiti (Sportivi)", "Cap 1: Switch Metabolico e Chetoni", "Cap 7: Timing dei Nutrienti"]
-        },
-        biohacker: {
-            title: "🧠 Profilo: Biohacking & Longevità",
-            desc: "Non cerchi solo l'estetica, ma l'ottimizzazione. Vuoi sfruttare l'autofagia, il BDNF e la riduzione della neuroinfiammazione per proteggere il tuo cervello e rallentare l'orologio biologico.",
-            chapters: ["Cap 5: Biohacking e Longevità", "Cap 1: Autofagia e Corpi Chetonici", "Cap 8: Sostenibilità a Lungo Termine"]
-        },
-        simplicity: {
-            title: "🧘‍♀️ Profilo: Libertà Mentale",
-            desc: "Sei esausto dalle diete restrittive e dal conteggio ossessivo. Il tuo percorso ti insegnerà a usare l'orologio come unica regola, riducendo lo stress psicologico e ritrovando il piacere di mangiare senza sensi di colpa.",
-            chapters: ["Cap 6: Liberi dal Conteggio", "Cap 8: Vita Sociale e Digiuno", "Cap 7: Il Codice delle Bevande"]
-        }
-    };
-
-    const data = profiles[selected.value];
-    document.getElementById('result-title').innerText = data.title;
-    document.getElementById('result-desc').innerHTML = data.desc;
-    
-    const chapContainer = document.getElementById('result-chapters');
-    chapContainer.innerHTML = '';
-    data.chapters.forEach(chap => {
-        const tag = document.createElement('span');
-        tag.className = 'chapter-tag';
-        tag.innerText = chap;
-        chapContainer.appendChild(tag);
-    });
-
-    // NUOVO: Aggiungi messaggio pre-acquisto
-    const preBuyMessage = document.createElement('div');
-    preBuyMessage.style.marginTop = '20px';
-    preBuyMessage.style.padding = '15px';
-    preBuyMessage.style.background = '#FFF3E0';
-    preBuyMessage.style.borderLeft = '4px solid #FFA726';
-    preBuyMessage.style.borderRadius = '0 8px 8px 0';
-    preBuyMessage.innerHTML = `
-        <strong>🎯 Il tuo profilo è stato identificato!</strong><br>
-        I capitoli chiave per te sono stati selezionati. 
-        Vuoi accedere al protocollo completo con tutti gli 8 capitoli, 
-        le tabelle operative e gli action plan personalizzati?
-    `;
-    document.getElementById('step-result').appendChild(preBuyMessage);
-
-    // NUOVO: Aggiungi pulsante di acquisto
-    const buyButton = document.createElement('button');
-    buyButton.className = 'btn';
-    buyButton.style.marginTop = '20px';
-    buyButton.style.background = '#FFA726';
-    buyButton.innerText = 'Ottieni il Protocollo Completo — Solo €37';
-    buyButton.onclick = () => {
-        // Salva il profilo selezionato (opzionale)
-        localStorage.setItem('selected_profile', selected.value);
-        
-        // ⚠️ SOSTITUISCI con il tuo link Gumroad reale!
-        window.location.href = 'https://marberto.gumroad.com/l/ksbxkm';
-    };
-    
-    document.getElementById('step-result').appendChild(buyButton);
-
-    nextStep('step-result');
+  const selectedProfile = document.querySelector('input[name="profile"]:checked');
+  
+  if (!selectedProfile) {
+    alert('Per favore, seleziona un profilo per continuare.');
+    return;
+  }
+  
+  const profiloScelto = selectedProfile.value;
+  
+  // Salva il profilo nel campo nascosto del form
+  document.getElementById('hidden-profilo').value = profiloScelto;
+  
+  // Mostra il form email (NON il risultato diretto)
+  showStep('step-email-form');
+  updateProgress(100);
 }
 
-// Scorciatoie da tastiera
-document.addEventListener('keydown', (e) => {
-    // Ignora se l'utente sta scrivendo in un input
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+// ============================================
+// STEP 2.5: Gestione Invio Form Email
+// ============================================
+
+document.getElementById('emailForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  
+  console.log('✅ Step 1: Form email intercettato!');
+  
+  const form = event.target;
+  const submitBtn = document.getElementById('submitBtn');
+  const profilo = document.getElementById('hidden-profilo').value;
+  const email = document.getElementById('emailInput').value;
+  
+  console.log('✅ Step 2: Profilo:', profilo);
+  console.log('✅ Step 3: Email:', email);
+  
+  // Disabilita il bottone
+  submitBtn.disabled = true;
+  submitBtn.textContent = '⏳ Elaborazione in corso...';
+  submitBtn.style.backgroundColor = '#9ca3af';
+  
+  // Nascondi messaggi precedenti
+  document.getElementById('form-success').style.display = 'none';
+  document.getElementById('form-error').style.display = 'none';
+  
+  // Invio a Formspree
+  fetch('https://formspree.io/f/xjgqdykq', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      email: email,
+      profilo: profilo,
+      privacy_consent: document.getElementById('privacy-consent').checked
+    })
+  })
+  .then(response => {
+    console.log('✅ Step 4: Risposta Formspree:', response.status);
     
-    // Solo se il quiz è visibile
-    const quizVisible = document.getElementById('quizContainer').style.display !== 'none';
-    if (!quizVisible) return;
-    
-    if (e.key === 'Escape' || e.key === 'ArrowLeft') {
-        // Indietro solo se non siamo nel risultato
-        const activeStep = document.querySelector('.step.active');
-        if (activeStep && activeStep.id !== 'step-result' && activeStep.id !== 'step-safety-fail') {
-            goBack();
-        }
+    if (response.ok) {
+      console.log('✅ Step 5: Email inviata!');
+      
+      // Mostra messaggio di successo
+      document.getElementById('form-success').style.display = 'block';
+      
+      // Determina l'URL di destinazione
+      const urlDestinazione = MAP_PAGINE_RISULTATO[profilo] || MAP_PAGINE_RISULTATO['liberta'];
+      
+      console.log('🚀 Step 6: Redirect a:', urlDestinazione);
+      
+      // Redirect dopo 800ms
+      setTimeout(() => {
+        window.location.href = urlDestinazione;
+      }, 800);
+      
+    } else {
+      console.error('❌ Errore Formspree:', response.status);
+      
+      document.getElementById('form-error').style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = '📩 Mostra il mio profilo e sblocca la guida';
+      submitBtn.style.backgroundColor = '#22c55e';
     }
+  })
+  .catch(error => {
+    console.error(' Errore di rete:', error);
+    
+    document.getElementById('form-error').style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = '📩 Mostra il mio profilo e sblocca la guida';
+    submitBtn.style.backgroundColor = '#22c55e';
+  });
 });
